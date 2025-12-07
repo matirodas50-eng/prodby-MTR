@@ -3,47 +3,948 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Pago Exitoso! - ProdByMTR</title>
+    <title>ProdByMTR | Producción Musical</title>
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
-        body {
-            background: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .success-container {
-            max-width: 600px;
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Inter', 'Arial', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #cccccc;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+            background: linear-gradient(45deg, rgba(0,0,0,0.7) 0%, rgba(80,80,80,0.5) 100%), url('background.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #000;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 2px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .cta-button:hover {
+            background: #e6e6e6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+        }
+
+        .products {
+            padding: 4rem 4rem;
+            background: #0a0a0a;
+        }
+
+        #about.products {
+            padding-top: 1rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        h1 {
-            color: #635bff;
-            margin-bottom: 20px;
+
+        .product-card {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid #333333;
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
-        .checkmark {
-            font-size: 80px;
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #555555;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .product-card p {
+            color: #cccccc;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .product-card .price {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin: 1.5rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .price-usd {
+            font-size: 0.9rem;
+            color: #888888;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .buy-button {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: #635bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .buy-button:hover {
+            background: #5a54d9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 91, 255, 0.3);
+        }
+
+        .buy-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .popular-badge {
+            background: linear-gradient(45deg, #ff6b00, #ff8c00);
+            color: #000000;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        .payment-methods {
+            padding: 4rem 4rem;
+            background: #111111;
+            text-align: center;
+        }
+
+        .payment-methods h3 {
+            margin-bottom: 2rem;
+            font-weight: 300;
+            font-size: 1.5rem;
+        }
+
+        .payment-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .payment-item {
+            color: #cccccc;
+            padding: 0.5rem 1rem;
+            background: #1a1a1a;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .payment-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            padding: 3rem 4rem;
+            text-align: center;
+            background: #000000;
+            border-top: 1px solid #333333;
+        }
+
+        .social-links a {
+            color: #ffffff;
+            margin: 0 1rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .social-links a:hover {
+            color: #cccccc;
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .service-card {
+            border: 1px solid #444444;
+        }
+
+        .service-card .price {
             color: #4CAF50;
-            margin-bottom: 30px;
         }
-        .btn {
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid #333;
+            border-left: 4px solid #635bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ========== NUEVOS ESTILOS PARA LA SOLUCIÓN ========== */
+        /* Modal de cold start */
+        #coldStartModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: #111;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 500px;
+            text-align: center;
+            border: 2px solid #635bff;
+            box-shadow: 0 20px 60px rgba(99, 91, 255, 0.2);
+        }
+
+        .modal-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .modal-title {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .modal-text {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .countdown {
+            font-size: 36px;
+            color: #635bff;
+            margin: 25px 0;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .modal-button {
             background: #635bff;
             color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            margin-top: 20px;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button:hover {
+            background: #5a54d9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 91, 255, 0.3);
+        }
+
+        /* Toast notifications */
+        #statusToast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #333;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            display: none;
+            z-index: 1000;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Estados de botones */
+        .buy-button.processing {
+            background: #ff9800 !important;
+            cursor: wait !important;
+        }
+
+        .buy-button.error {
+            background: #f44336 !important;
+        }
+
+        .buy-button.retry {
+            background: #ff9800 !important;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 2rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .products {
+                padding: 2rem 2rem;
+            }
+            
+            #about.products {
+                padding: 1rem 2rem 2rem 2rem;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .payment-methods {
+                padding: 2rem 2rem;
+            }
+            
+            .payment-icons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav a {
+                margin-left: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .footer {
+                padding: 2rem 2rem;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            #statusToast {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="success-container">
-        <div class="checkmark">✅</div>
-        <h1>¡Pago Exitoso!</h1>
-        <p>Gracias por tu compra. Hemos enviado los detalles de descarga a tu email.</p>
-        <p>Revisa tu bandeja de entrada (y spam) en los próximos minutos.</p>
-        <a href="https://matirodas50-eng.github.io/prodby-MTR/" class="btn">Volver al Inicio</a>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Prod By MTR</div>
+        <nav class="nav">
+            <a href="#products">Productos</a>
+            <a href="#about">Servicios</a>
+            <a href="#contact">Contacto</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="glow-text">PRODUCCIÓN <br>MUSICAL</h1>
+            <p>Drumkits • Samples • Plantillas • Presets</p>
+            <a href="#products" class="cta-button">VER PRODUCTOS</a>
+        </div>
+    </section>
+
+    <!-- Productos -->
+    <section id="products" class="products">
+        <h2 class="section-title">PRODUCTOS</h2>
+        <div class="product-grid">
+            <!-- Producto 1 -->
+            <div class="product-card">
+                <div class="popular-badge">MÁS POPULAR</div>
+                <h3>DRUMKIT ESSENTIAL</h3>
+                <p>150+ sonidos premium seleccionados para tus producciones. Kicks, snares, hi-hats y percusión única.</p>
+                <div class="price">$25 USD</div>
+                <div class="price-usd">Pago único • Descarga inmediata</div>
+                <button class="buy-button" onclick="comprarProducto('drumkit-essential')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="product-card">
+                <h3>VOCAL CHAIN TEMPLATE</h3>
+                <p>Plantilla vocal completa con plugins nativos de FL Studio. EQ, compresión, delay y reverb incluidos.</p>
+                <div class="price">$25 USD</div>
+                <div class="price-usd">Pago único • Descarga inmediata</div>
+                <button class="buy-button" onclick="comprarProducto('vocal-template')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="product-card">
+                <h3>PLANTILLAS FL STUDIO</h3>
+                <p>Estructuras profesionales listas para usar. Incluye 10 plantillas de diferentes géneros musicales.</p>
+                <div class="price">$35 USD</div>
+                <div class="price-usd">Pago único • Descarga inmediata</div>
+                <button class="buy-button" onclick="comprarProducto('plantillas-fl')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 4 -->
+            <div class="product-card">
+                <h3>BUNDLE COMPLETO</h3>
+                <p>Todos nuestros productos en un solo pack con 30% de descuento. Ideal para productores que empiezan.</p>
+                <div class="price">$55 USD</div>
+                <div class="price-usd">Ahorras $25 • Descarga inmediata</div>
+                <button class="buy-button" onclick="comprarProducto('bundle-completo')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios -->
+    <section id="about" class="products">
+        <h2 class="section-title">SERVICIOS</h2>
+        <div class="product-grid">
+            <!-- Servicio 1 -->
+            <div class="product-card service-card">
+                <h3>MEZCLA</h3>
+                <p>Balance perfecto, ecualización, compresión y efectos. Tu canción sonará clara, poderosa y lista para streaming.</p>
+                <div class="price">$60 USD</div>
+                <div class="price-usd">Entrega en 3-5 días</div>
+                <button class="buy-button" onclick="solicitarServicio('MEZCLA PROFESIONAL', 60)">SOLICITAR SERVICIO</button>
+            </div>
+
+            <!-- Servicio 2 -->
+            <div class="product-card service-card">
+                <div class="popular-badge">MÁS POPULAR</div>
+                <h3>MEZCLA + MASTERING</h3>
+                <p>Completo: mezcla profesional + mastering final. Tu track listo para plataformas digitales con volumen competitivo.</p>
+                <div class="price">$79 USD</div>
+                <div class="price-usd">Paquete completo</div>
+                <button class="buy-button" onclick="solicitarServicio('MEZCLA + MASTERING', 79)">SOLICITAR SERVICIO</button>
+            </div>
+
+            <!-- Servicio 3 -->
+            <div class="product-card service-card">
+                <h3>MASTERING</h3>
+                <p>Proceso final para maximizar el volumen y calidad. Tu canción sonará profesional en todas las plataformas.</p>
+                <div class="price">$30 USD</div>
+                <div class="price-usd">Entrega en 1-2 días</div>
+                <button class="buy-button" onclick="solicitarServicio('MASTERING', 30)">SOLICITAR SERVICIO</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Cold Start (oculto inicialmente) -->
+    <div id="coldStartModal">
+        <div class="modal-content">
+            <span class="modal-icon">⏳</span>
+            <h2 class="modal-title">Servidor Iniciando</h2>
+            <p class="modal-text">
+                <strong>IMPORTANTE:</strong> El servidor está iniciando (puede tardar 30-60 segundos).
+                <br><br>Por favor, haz clic en "Comprar Ahora" y <strong>espera unos momentos</strong> antes de intentar nuevamente.
+            </p>
+            <div class="countdown" id="countdown">5</div>
+            <button class="modal-button" onclick="hideColdStartModal()">
+                Entendido, proceder con compra
+            </button>
+        </div>
     </div>
+
+    <!-- Toast para notificaciones -->
+    <div id="statusToast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Footer con ID para el enlace de Contacto -->
+    <footer class="footer" id="contact">
+        <div class="social-links">
+            <a href="https://wa.me/595983775018" target="_blank">WhatsApp</a>
+            <a href="https://instagram.com/matiasropy" target="_blank">Instagram</a>
+            <a href="https://tiktok.com/@matiasrodas_" target="_blank">TikTok</a>
+            <a href="mailto:matirodas50@gmail.com">Email</a>
+        </div>
+        <p class="copyright">&copy; 2025 César Matias Rodas Arce. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- ========== JAVASCRIPT COMPLETO ========== -->
+    <script>
+        // ========== CONFIGURACIÓN ==========
+        const stripe = Stripe('pk_test_51SZ0af0187fYYBafTVsmPGg0WKEdgr8ofjq1aR6AtpSrtvBxDdKJDaKlpYJvvwcaT0IhnxBtAmdTEYlcdXEMTF4e008xT4tmBU');
+        const backendUrl = 'https://prodbymtr-backend.onrender.com';
+        
+        // ========== VARIABLES GLOBALES ==========
+        let isProcessing = false;
+        let currentButton = null;
+        
+        // ========== DETECTAR SI VIENE DE STRIPE ==========
+        function checkIfReturningFromStripe() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromStripe = urlParams.has('session_id') || 
+                               urlParams.has('payment_intent') ||
+                               urlParams.has('checkout');
+            
+            if (fromStripe) {
+                console.log('🔄 Usuario vuelve de Stripe - Reseteando todo...');
+                resetAllButtons();
+                // Limpiar URL sin recargar
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+        
+        // ========== RESETEAR TODOS LOS BOTONES ==========
+        function resetAllButtons() {
+            console.log('🔄 Reseteando estado de botones...');
+            document.querySelectorAll('.buy-button').forEach(button => {
+                button.textContent = 'COMPRAR AHORA';
+                button.disabled = false;
+                button.style.background = '#635bff';
+                button.classList.remove('processing', 'error', 'retry');
+            });
+            isProcessing = false;
+            currentButton = null;
+        }
+        
+        // ========== VERIFICAR ESTADO DEL BACKEND ==========
+        async function checkBackendStatus() {
+            try {
+                console.log('🔍 Verificando backend...');
+                const response = await fetch(`${backendUrl}/api/health`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: AbortSignal.timeout(5000)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'OK') {
+                        console.log('✅ Backend listo!');
+                        showToast('✅ Servidor listo', 'success');
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ Backend iniciando...');
+            }
+            return false;
+        }
+        
+        // ========== MOSTRAR/OCULTAR MODAL ==========
+        function showColdStartModal() {
+            console.log('⚠️ Mostrando advertencia de cold start...');
+            document.getElementById('coldStartModal').style.display = 'flex';
+            
+            let countdown = 5;
+            const countdownElement = document.getElementById('countdown');
+            
+            const interval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    hideColdStartModal();
+                }
+            }, 1000);
+        }
+        
+        function hideColdStartModal() {
+            document.getElementById('coldStartModal').style.display = 'none';
+            console.log('✅ Modal cerrado');
+        }
+        
+        // ========== MOSTRAR TOAST ==========
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('statusToast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            
+            // Colores según tipo
+            if (type === 'success') {
+                toast.style.background = '#4CAF50';
+            } else if (type === 'warning') {
+                toast.style.background = '#ff9800';
+            } else if (type === 'error') {
+                toast.style.background = '#f44336';
+            } else {
+                toast.style.background = '#333';
+            }
+            
+            toast.style.display = 'block';
+            
+            // Ocultar después de 5 segundos
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 5000);
+        }
+        
+        // ========== FUNCIÓN PRINCIPAL DE COMPRA ==========
+        async function comprarProducto(productId) {
+            // Evitar múltiples clics
+            if (isProcessing) {
+                console.log('⏸️ Ya hay una compra en proceso...');
+                return;
+            }
+            
+            // Guardar referencia al botón
+            const button = event.target;
+            currentButton = button;
+            const originalText = button.textContent;
+            const originalColor = button.style.background;
+            
+            // 1. Estado inicial
+            isProcessing = true;
+            button.textContent = '⏳ INICIANDO...';
+            button.disabled = true;
+            button.style.background = '#ff9800';
+            button.classList.add('processing');
+            
+            // 2. Verificar backend
+            console.log('🔄 Verificando estado del servidor...');
+            const isBackendReady = await checkBackendStatus();
+            
+            if (!isBackendReady) {
+                console.log('⚠️ Backend no listo - Mostrando advertencia...');
+                showColdStartModal();
+                showToast('⚠️ Servidor iniciando... Intenta en 30 segundos', 'warning');
+                
+                // Resetear botón para reintento
+                setTimeout(() => {
+                    button.textContent = '🔄 INTENTAR NUEVAMENTE';
+                    button.style.background = '#ff9800';
+                    button.classList.remove('processing');
+                    button.classList.add('retry');
+                    button.disabled = false;
+                    isProcessing = false;
+                }, 2000);
+                
+                return;
+            }
+            
+            // 3. Intentar la compra
+            await attemptPurchase(productId, button, originalText, originalColor);
+        }
+        
+        // ========== INTENTAR COMPRA ==========
+        async function attemptPurchase(productId, button, originalText, originalColor) {
+            try {
+                button.textContent = '🔒 PROCESANDO...';
+                
+                console.log('🛒 Creando sesión de pago...');
+                const response = await fetch(`${backendUrl}/api/crear-pago`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId: productId })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    console.log('✅ Sesión creada:', data.sessionId);
+                    showToast('✅ Redirigiendo a Stripe...', 'success');
+                    
+                    // Redirigir a Stripe
+                    const result = await stripe.redirectToCheckout({
+                        sessionId: data.sessionId,
+                    });
+                    
+                    if (result.error) {
+                        throw new Error(result.error.message);
+                    }
+                    
+                } else {
+                    throw new Error(data.error || 'Error desconocido');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error en compra:', error);
+                
+                // Manejar diferentes tipos de error
+                if (error.name === 'AbortError' || error.message.includes('Failed to fetch')) {
+                    showToast('🌐 Error de conexión - Servidor iniciando...', 'error');
+                    button.textContent = '🔄 INTENTAR NUEVAMENTE';
+                    button.classList.add('retry');
+                } else {
+                    showToast(`❌ Error: ${error.message}`, 'error');
+                    button.textContent = '⚠️ ERROR - REINTENTAR';
+                    button.classList.add('error');
+                }
+                
+                // Permitir reintento después de 3 segundos
+                setTimeout(() => {
+                    if (button === currentButton) {
+                        button.textContent = originalText;
+                        button.style.background = originalColor;
+                        button.classList.remove('processing', 'error', 'retry');
+                        button.disabled = false;
+                        isProcessing = false;
+                    }
+                }, 3000);
+            }
+        }
+        
+        // ========== FUNCIÓN SERVICIOS (SIN CAMBIOS) ==========
+        function solicitarServicio(nombreServicio, precio) {
+            const TU_NUMERO_WHATSAPP = '+595983775018';
+            const fecha = new Date().toLocaleDateString();
+            
+            const mensaje = `🎵 *SOLICITUD DE SERVICIO - PRODUCCIÓN MUSICAL*\n\n📋 *Servicio:* ${nombreServicio}\n💰 *Precio:* $${precio} USD\n📅 *Fecha:* ${fecha}\n\n👤 *Mi información:*\n• 📧 Email: ___________\n• 📱 Teléfono: ___________\n• 🏷️ Nombre: ___________\n\n🎶 *Detalles del proyecto:*\n• Género musical: ___________\n• Referencias: ___________\n• Fecha límite: ___________\n\n💬 *Comentarios adicionales:*\n___________________\n\nPor favor, contactame para coordinar los detalles. ¡Gracias! ✨`;
+            
+            const mensajeCodificado = encodeURIComponent(mensaje);
+            const urlWhatsApp = `https://wa.me/${TU_NUMERO_WHATSAPP}?text=${mensajeCodificado}`;
+            
+            window.open(urlWhatsApp, '_blank');
+        }
+        
+        // ========== INICIALIZACIÓN ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎬 Página cargada - Inicializando...');
+            
+            // 1. Verificar si viene de Stripe
+            checkIfReturningFromStripe();
+            
+            // 2. Verificar backend (en segundo plano)
+            setTimeout(() => {
+                checkBackendStatus();
+            }, 1000);
+            
+            // 3. Configurar navegación suave
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // 4. Efectos hover en tarjetas
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 5. Efecto de scroll en header
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(0,0,0,0.95)';
+                    header.style.padding = '1rem 4rem';
+                } else {
+                    header.style.background = 'rgba(0,0,0,0.9)';
+                    header.style.padding = '1.5rem 4rem';
+                }
+            });
+        });
+        
+        // ========== DETECTAR CUANDO VUELVE A LA PESTAÑA ==========
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // Usuario volvió a la pestaña
+                console.log('👁️ Usuario volvió a la pestaña - Verificando estado...');
+                setTimeout(checkIfReturningFromStripe, 100);
+            }
+        });
+        
+        // ========== DETECTAR RECARGA DESDE CACHE ==========
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                console.log('🔄 Página cargada desde cache - Reseteando...');
+                resetAllButtons();
+            }
+        });
+        
+        // ========== ANIMACIONES INICIALES ==========
+        setTimeout(() => {
+            document.querySelectorAll('.product-card, .section-title').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            });
+            
+            // Animar cuando se hace scroll
+            function animarElementosAlScroll() {
+                document.querySelectorAll('.product-card, .section-title').forEach(elemento => {
+                    const elementoTop = elemento.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    if (elementoTop < windowHeight - 100) {
+                        elemento.style.opacity = '1';
+                        elemento.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', animarElementosAlScroll);
+            animarElementosAlScroll(); // Animar los visibles inicialmente
+        }, 100);
+    </script>
 </body>
 </html>
-

@@ -290,26 +290,90 @@
             color: #4CAF50;
         }
 
-        /* Loading */
-        .loading {
+        /* Modal de carga */
+        #loading-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
             display: none;
-            text-align: center;
-            padding: 2rem;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
         }
 
-        .spinner {
+        .spinner-large {
             border: 4px solid #333;
             border-left: 4px solid #635bff;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            margin-bottom: 20px;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 400px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .loading-timer {
+            color: #635bff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .loading-cancel {
+            background: transparent;
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .loading-cancel:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        /* Nota sobre Render */
+        .render-notice {
+            background: #111;
+            border-left: 4px solid #635bff;
+            padding: 12px 16px;
+            margin: 20px auto;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
@@ -373,6 +437,11 @@
             <a href="#products" class="cta-button">VER PRODUCTOS</a>
         </div>
     </section>
+
+    <!-- Nota sobre Render -->
+    <div class="render-notice" id="render-notice">
+        ⏳ <strong>Nota importante:</strong> El servidor usa un plan gratuito y puede tardar hasta 30 segundos en activarse si es la primera compra del día. ¡Gracias por tu paciencia!
+    </div>
 
     <!-- Productos -->
     <section id="products" class="products">
@@ -459,13 +528,20 @@
         </div>
     </section>
 
-    <!-- Loading -->
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
-        <p>Procesando pago...</p>
+    <!-- Modal de carga -->
+    <div id="loading-modal">
+        <div class="spinner-large"></div>
+        <div class="loading-text" id="loading-text">Preparando tu pago...</div>
+        <div class="loading-subtext" id="loading-subtext">
+            ⏳ El servidor gratuito puede tardar hasta 30 segundos en activarse.<br>
+            ¡Gracias por tu paciencia!
+        </div>
+        <div class="loading-timer" id="loading-timer">30</div>
+        <div class="loading-subtext">segundos restantes</div>
+        <button class="loading-cancel" onclick="cancelarPago()">Cancelar</button>
     </div>
     
-    <!-- Footer con ID para el enlace de Contacto -->
+    <!-- Footer -->
     <footer class="footer" id="contact">
         <div class="social-links">
             <a href="https://wa.me/595983775018" target="_blank">WhatsApp</a>
@@ -477,57 +553,156 @@
     </footer>
 
     <script>
-        // Stripe - REEMPLAZÁ CON TU CLAVE PÚBLICA REAL
-        const stripe = Stripe('pk_test_51SZ0af0187fYYBafTVsmPGg0WKEdgr8ofjq1aR6AtpSrtvBxDdKJDaKlpYJvvwcaT0IhnxBtAmdTEYlcdXEMTF4e008xT4tmBU'); // Tu Stripe public key aquí
+        // Stripe
+        const stripe = Stripe('pk_test_51SZ0af0187fYYBafTVsmPGg0WKEdgr8ofjq1aR6AtpSrtvBxDdKJDaKlpYJvvwcaT0IhnxBtAmdTEYlcdXEMTF4e008xT4tmBU');
         
-        // Función REAL de compra
-        async function comprarProducto(productId) {
-            const button = event.target;
-            const originalText = button.textContent;
+        // Variables globales
+        let currentButton = null;
+        let originalButtonText = '';
+        let countdownInterval = null;
+        let countdownTime = 30;
+        let controller = null;
+
+        // Mostrar/ocultar modal
+        function showLoadingModal() {
+            const modal = document.getElementById('loading-modal');
+            modal.style.display = 'flex';
+            countdownTime = 30;
+            document.getElementById('loading-timer').textContent = countdownTime;
             
-            // Mostrar loading
-            button.textContent = 'PROCESANDO...';
-            button.disabled = true;
+            countdownInterval = setInterval(() => {
+                countdownTime--;
+                document.getElementById('loading-timer').textContent = countdownTime;
+                if (countdownTime <= 10) {
+                    document.getElementById('loading-timer').style.color = '#ff6b6b';
+                }
+                if (countdownTime <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('loading-text').textContent = 'Tiempo agotado';
+                    document.getElementById('loading-subtext').textContent = 'El servidor no responde. Por favor, intentá de nuevo.';
+                }
+            }, 1000);
+        }
+
+        function hideLoadingModal() {
+            const modal = document.getElementById('loading-modal');
+            modal.style.display = 'none';
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (controller) controller.abort();
+        }
+
+        // Cancelar pago
+        function cancelarPago() {
+            hideLoadingModal();
+            if (currentButton) {
+                currentButton.disabled = false;
+                currentButton.textContent = originalButtonText;
+            }
+            document.getElementById('render-notice').style.display = 'none';
+        }
+
+        // Función de compra MEJORADA
+        async function comprarProducto(productId) {
+            // Guardar referencia al botón
+            currentButton = event.target;
+            originalButtonText = currentButton.textContent;
+            
+            // Mostrar nota sobre Render
+            document.getElementById('render-notice').style.display = 'block';
+            
+            // Deshabilitar botón
+            currentButton.disabled = true;
+            currentButton.textContent = '⏳ PROCESANDO...';
+            
+            // Mostrar modal de carga
+            showLoadingModal();
+            
+            // Configurar timeout
+            controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 35000); // 35 segundos
             
             try {
                 console.log('🛒 Iniciando compra:', productId);
                 
+                // Intentar calentar el servidor primero
+                try {
+                    await fetch('https://prodbymtr-backend.onrender.com/api/warmup', {
+                        signal: AbortSignal.timeout(5000)
+                    });
+                } catch (e) {
+                    // No pasa nada si falla, es solo un warm-up
+                }
+                
+                // Real petición
                 const response = await fetch('https://prodbymtr-backend.onrender.com/api/crear-pago', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        productId: productId
-                    }),
+                    body: JSON.stringify({ productId }),
+                    signal: controller.signal
                 });
 
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    let errorMsg = `Error HTTP: ${response.status}`;
+                    if (response.status === 503 || response.status === 504) {
+                        errorMsg = 'El servidor está iniciando. Por favor, esperá 30 segundos e intentá de nuevo.';
+                    } else if (response.status === 0) {
+                        errorMsg = 'No se pudo conectar al servidor. Verificá tu conexión.';
+                    }
+                    throw new Error(errorMsg);
+                }
+                
                 const data = await response.json();
                 
                 if (data.success) {
                     console.log('✅ Sesión creada:', data.sessionId);
+                    document.getElementById('loading-text').textContent = 'Redirigiendo a Stripe...';
                     
-                    // Redirigir a Stripe Checkout REAL
+                    // Redirigir a Stripe
                     const result = await stripe.redirectToCheckout({
                         sessionId: data.sessionId,
                     });
 
                     if (result.error) {
-                        alert('Error: ' + result.error.message);
+                        throw new Error('Stripe: ' + result.error.message);
                     }
                 } else {
-                    alert('Error: ' + data.error);
+                    throw new Error(data.message || data.error || 'Error desconocido');
                 }
             } catch (error) {
                 console.error('❌ Error:', error);
-                alert('Error de conexión: ' + error.message);
-            } finally {
-                button.textContent = originalText;
-                button.disabled = false;
+                hideLoadingModal();
+                
+                // Mensajes amigables
+                let mensajeUsuario = error.message;
+                
+                if (error.name === 'AbortError' || error.message.includes('timeout')) {
+                    mensajeUsuario = '⏳ El servidor está tardando en responder.\n\nSolución:\n1. Esperá 30 segundos\n2. Recargá la página\n3. Intentá de nuevo\n\n¡Gracias por tu paciencia!';
+                } else if (error.message.includes('iniciando') || error.message.includes('503')) {
+                    mensajeUsuario = '🚀 El servidor se está activando (puede tardar hasta 30 segundos).\nPor favor, intentá de nuevo en medio minuto.';
+                } else if (error.message.includes('Failed to fetch') || error.message.includes('conectar')) {
+                    mensajeUsuario = '🔌 Error de conexión. Verificá tu internet e intentá de nuevo.';
+                }
+                
+                alert(mensajeUsuario);
+                
+                // Restaurar botón
+                if (currentButton) {
+                    currentButton.disabled = false;
+                    currentButton.textContent = originalButtonText;
+                }
+                
+                // Ocultar notificación después de 5 segundos
+                setTimeout(() => {
+                    document.getElementById('render-notice').style.display = 'none';
+                }, 5000);
             }
         }
 
-        // Función para servicios
+        // Función para servicios (sin cambios)
         function solicitarServicio(nombreServicio, precio) {
             const TU_NUMERO_WHATSAPP = '+595983775018';
             const fecha = new Date().toLocaleDateString();
@@ -540,13 +715,20 @@
             window.open(urlWhatsApp, '_blank');
         }
 
-        // Efectos de scroll y animaciones
-        document.addEventListener('DOMContentLoaded', function() {
-            inicializarEventListeners();
-            inicializarScrollEffects();
+        // Prevenir que el botón quede "pegado"
+        window.addEventListener('pageshow', function(event) {
+            document.querySelectorAll('.buy-button').forEach(button => {
+                button.disabled = false;
+                if (button.textContent.includes('PROCESANDO')) {
+                    button.textContent = 'COMPRAR AHORA';
+                }
+            });
+            hideLoadingModal();
         });
 
-        function inicializarEventListeners() {
+        // Resto del código existente (scroll effects, etc.)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar event listeners
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -560,17 +742,7 @@
                 });
             });
 
-            document.querySelectorAll('.product-card').forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-8px)';
-                });
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
-        }
-
-        function inicializarScrollEffects() {
+            // Scroll effects
             const header = document.querySelector('.header');
             window.addEventListener('scroll', function() {
                 const scrollY = window.scrollY;
@@ -581,30 +753,31 @@
                     header.style.background = 'rgba(0,0,0,0.9)';
                     header.style.padding = '1.5rem 4rem';
                 }
+            });
+
+            // Animaciones iniciales
+            setTimeout(() => {
+                document.querySelectorAll('.product-card, .section-title').forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(20px)';
+                    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                });
                 animarElementosAlScroll();
-            });
-        }
+            }, 100);
 
-        function animarElementosAlScroll() {
-            const elementos = document.querySelectorAll('.product-card, .section-title');
-            elementos.forEach(elemento => {
-                const elementoTop = elemento.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                if (elementoTop < windowHeight - 100) {
-                    elemento.style.opacity = '1';
-                    elemento.style.transform = 'translateY(0)';
-                }
-            });
-        }
-
-        setTimeout(() => {
-            document.querySelectorAll('.product-card, .section-title').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            });
-            animarElementosAlScroll();
-        }, 100);
+            function animarElementosAlScroll() {
+                const elementos = document.querySelectorAll('.product-card, .section-title');
+                elementos.forEach(elemento => {
+                    const elementoTop = elemento.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    if (elementoTop < windowHeight - 100) {
+                        elemento.style.opacity = '1';
+                        elemento.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            window.addEventListener('scroll', animarElementosAlScroll);
+        });
     </script>
 </body>
 </html>

@@ -145,6 +145,16 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
+        .product-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+            background: linear-gradient(45deg, #222, #444); /* Fondo mientras carga */
+        }
+
         .product-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
@@ -220,66 +230,7 @@
             left: 50%;
             transform: translateX(-50%);
             white-space: nowrap;
-        }
-
-        .payment-methods {
-            padding: 4rem 4rem;
-            background: #111111;
-            text-align: center;
-        }
-
-        .payment-methods h3 {
-            margin-bottom: 2rem;
-            font-weight: 300;
-            font-size: 1.5rem;
-        }
-
-        .payment-icons {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .payment-item {
-            color: #cccccc;
-            padding: 0.5rem 1rem;
-            background: #1a1a1a;
-            border-radius: 4px;
-            transition: transform 0.3s ease;
-        }
-
-        .payment-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .footer {
-            padding: 3rem 4rem;
-            text-align: center;
-            background: #000000;
-            border-top: 1px solid #333333;
-        }
-
-        .social-links a {
-            color: #ffffff;
-            margin: 0 1rem;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .social-links a:hover {
-            color: #cccccc;
-        }
-
-        .copyright {
-            margin-top: 2rem;
-            color: #666;
-            font-size: 0.8rem;
-        }
-
-        .glow-text {
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            z-index: 1;
         }
 
         .service-card {
@@ -358,11 +309,6 @@
             color: white;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         @media (max-width: 768px) {
             .header {
                 padding: 1rem 2rem;
@@ -402,6 +348,10 @@
             .footer {
                 padding: 2rem 2rem;
             }
+            
+            .product-image {
+                height: 150px;
+            }
         }
     </style>
 </head>
@@ -429,9 +379,10 @@
     <section id="products" class="products">
         <h2 class="section-title">PRODUCTOS</h2>
         <div class="product-grid">
-            <!-- Producto 1 -->
+            <!-- Producto 1 - DRUMKIT ESSENTIAL -->
             <div class="product-card">
                 <div class="popular-badge">MÁS POPULAR</div>
+                <img src="images/drumkit.jpg" alt="Drumkit Essential" class="product-image">
                 <h3>DRUMKIT ESSENTIAL</h3>
                 <p>150+ sonidos premium seleccionados para tus producciones. Kicks, snares, hi-hats y percusión única.</p>
                 <div class="price">$25 USD</div>
@@ -441,34 +392,103 @@
                 </button>
             </div>
 
-            <!-- Producto 2 -->
+            <!-- Producto 2 - VOCAL CHAIN TEMPLATE -->
             <div class="product-card">
+                <img src="images/vocal-template.jpg" alt="Vocal Chain Template" class="product-image">
                 <h3>VOCAL CHAIN TEMPLATE</h3>
                 <p>Plantilla vocal completa con plugins nativos de FL Studio. EQ, compresión, delay y reverb incluidos.</p>
-                <div class="price">$25 USD</div>
+                <div class="price">$17 USD</div>
                 <div class="price-usd">Pago único • Descarga inmediata</div>
                 <button class="buy-button" onclick="comprarProducto('vocal-template')">
                     COMPRAR AHORA
                 </button>
             </div>
 
-            <!-- Producto 3 -->
+            <!-- Producto 3 - PLANTILLAS FL STUDIO -->
             <div class="product-card">
+                <img src="images/plantillas-fl.jpg" alt="Plantillas FL Studio" class="product-image">
                 <h3>PLANTILLAS FL STUDIO</h3>
-                <p>Estructuras profesionales listas para usar. Incluye 10 plantillas de diferentes géneros musicales.</p>
-                <div class="price">$35 USD</div>
+                <p>Estructuras profesionales listas para usar. Incluye 2 plantillas de (Mezcla + Mastering) y otra para Grabación.</p>
+                <div class="price">$29 USD</div>
                 <div class="price-usd">Pago único • Descarga inmediata</div>
                 <button class="buy-button" onclick="comprarProducto('plantillas-fl')">
                     COMPRAR AHORA
                 </button>
             </div>
 
-            <!-- Producto 4 -->
+            <!-- Producto 4 - CUMBIA 420 -->
             <div class="product-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #00ff88, #00ccff);">🔥 NUEVO</div>
+                <img src="images/cumbia-420.jpg" alt="Cumbia 420 Drumkit" class="product-image">
+                <h3>CUMBIA 420 - DRUMKIT</h3>
+                <p>Sonidos auténticos de cumbia argentina/paraguaya. Gritos, acordeón samples, guitarras y percusión característica.</p>
+                <div class="price">$18 USD</div>
+                <div class="price-usd">Pago único • 150+ samples • Incluye presets</div>
+                <button class="buy-button" onclick="comprarProducto('cumbia-420')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 5 - REGGAETON HITS -->
+            <div class="product-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #ff0066, #ff00cc);">🎵 TOP</div>
+                <img src="images/reggaeton-hits.jpg" alt="Reggaeton Hits" class="product-image">
+                <h3>REGGAETON HITS - DRUMKIT</h3>
+                <p>Kicks potentes, snares punchy, hi-hats rolls y dembow patterns listos para usar. Sonido urbano profesional.</p>
+                <div class="price">$20 USD</div>
+                <div class="price-usd">Pago único • 200+ sounds • Patterns incluidos</div>
+                <button class="buy-button" onclick="comprarProducto('reggaeton-hits')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 6 - TRAP ESSENTIALS -->
+            <div class="product-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #ffaa00, #ff5500);">🎤 VOCALES</div>
+                <img src="images/trap-essentials.jpg" alt="Trap Essentials" class="product-image">
+                <h3>TRAP ESSENTIALS - PACK</h3>
+                <p>808s distorsionados, hi-hats veloces, kicks sub-bass y adlibs. Ideal para trap latino y drill.</p>
+                <div class="price">$22 USD</div>
+                <div class="price-usd">Pago único • 808s exclusivos • Adlibs pack</div>
+                <button class="buy-button" onclick="comprarProducto('trap-essentials')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 7 - SYNTHWAVE/POP -->
+            <div class="product-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #9d00ff, #00aaff);">🌌 VINTAGE</div>
+                <img src="images/synthwave-pop.jpg" alt="Synthwave & Pop" class="product-image">
+                <h3>SYNTHWAVE & POP - PACK</h3>
+                <p>Sintetizadores retro, pads atmosféricos, arpegios y leads melódicos. Perfecto para pop moderno y synthwave.</p>
+                <div class="price">$25 USD</div>
+                <div class="price-usd">Pago único • 100+ presets • MIDI patterns</div>
+                <button class="buy-button" onclick="comprarProducto('synthwave-pop')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 8 - BUNDLE DE GÉNEROS -->
+            <div class="product-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #ff0000, #ff8800);">💰 OFERTA</div>
+                <img src="images/bundle-generos.jpg" alt="Bundle Géneros" class="product-image">
+                <h3>BUNDLE DE GÉNEROS</h3>
+                <p>Todos los géneros en un solo pack: Cumbia, Reggaeton, Trap y Synthwave. 600+ samples y presets.</p>
+                <div class="price">$65 USD</div>
+                <div class="price-usd">Ahorras $20 • 4 en 1 • Descarga inmediata</div>
+                <button class="buy-button" onclick="comprarProducto('bundle-generos')">
+                    COMPRAR AHORA
+                </button>
+            </div>
+
+            <!-- Producto 9 - BUNDLE COMPLETO -->
+            <div class="product-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #00ff00, #008800);">🌟 MEGA</div>
+                <img src="images/bundle-completo.jpg" alt="Bundle Completo" class="product-image">
                 <h3>BUNDLE COMPLETO</h3>
-                <p>Todos nuestros productos en un solo pack con 30% de descuento. Ideal para productores que empiezan.</p>
-                <div class="price">$55 USD</div>
-                <div class="price-usd">Ahorras $25 • Descarga inmediata</div>
+                <p>TODOS nuestros productos en un solo pack con 40% de descuento. Todo lo que necesitás para producir.</p>
+                <div class="price">$99 USD</div>
+                <div class="price-usd">Ahorras $66 • 9 productos • Descarga inmediata</div>
                 <button class="buy-button" onclick="comprarProducto('bundle-completo')">
                     COMPRAR AHORA
                 </button>
@@ -480,7 +500,17 @@
     <section id="about" class="products">
         <h2 class="section-title">SERVICIOS</h2>
         <div class="product-grid">
-            <!-- Servicio 1 -->
+            <!-- Servicio 1 - PRESET VOCAL PERSONALIZADO -->
+            <div class="product-card service-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #ff00ff, #cc00ff);">🎤 PERSONALIZADO</div>
+                <h3>PRESET VOCAL PERSONALIZADO</h3>
+                <p>Creo un preset EXCLUSIVO para TU voz. Analizo tu tipo de voz, timbre y estilo para crear una cadena de efectos perfecta para vos.</p>
+                <div class="price">$45 USD</div>
+                <div class="price-usd">Preset personalizado • Instalación guiada • Revisión incluida</div>
+                <button class="buy-button" onclick="solicitarServicio('PRESET VOCAL PERSONALIZADO', 45)">SOLICITAR SERVICIO</button>
+            </div>
+
+            <!-- Servicio 2 - MEZCLA -->
             <div class="product-card service-card">
                 <h3>MEZCLA</h3>
                 <p>Balance perfecto, ecualización, compresión y efectos. Tu canción sonará clara, poderosa y lista para streaming.</p>
@@ -489,7 +519,7 @@
                 <button class="buy-button" onclick="solicitarServicio('MEZCLA', 60)">SOLICITAR SERVICIO</button>
             </div>
 
-            <!-- Servicio 2 -->
+            <!-- Servicio 3 - MEZCLA + MASTERING -->
             <div class="product-card service-card">
                 <div class="popular-badge">MÁS POPULAR</div>
                 <h3>MEZCLA + MASTERING</h3>
@@ -499,7 +529,7 @@
                 <button class="buy-button" onclick="solicitarServicio('MEZCLA + MASTERING', 79)">SOLICITAR SERVICIO</button>
             </div>
 
-            <!-- Servicio 3 -->
+            <!-- Servicio 4 - MASTERING -->
             <div class="product-card service-card">
                 <h3>MASTERING</h3>
                 <p>Proceso final para maximizar el volumen y calidad. Tu canción sonará comercial en todas las plataformas.</p>
@@ -542,14 +572,13 @@
         let currentButton = null;
         let originalButtonText = '';
         let countdownInterval = null;
-        let countdownTime = 30;
         let controller = null;
 
         // Mostrar/ocultar modal
         function showLoadingModal() {
             const modal = document.getElementById('loading-modal');
             modal.style.display = 'flex';
-            countdownTime = 30;
+            let countdownTime = 30;
             document.getElementById('loading-timer').textContent = countdownTime;
             
             countdownInterval = setInterval(() => {
@@ -582,7 +611,7 @@
             }
         }
 
-        // Función de compra MEJORADA
+        // Función de compra OPTIMIZADA
         async function comprarProducto(productId) {
             // Guardar referencia al botón
             currentButton = event.target;
@@ -597,21 +626,10 @@
             
             // Configurar timeout
             controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 35000); // 35 segundos
+            const timeoutId = setTimeout(() => controller.abort(), 35000);
             
             try {
-                console.log('🛒 Iniciando compra:', productId);
-                
-                // Intentar calentar el servidor primero
-                try {
-                    await fetch('https://prodbymtr-backend.onrender.com/api/warmup', {
-                        signal: AbortSignal.timeout(5000)
-                    });
-                } catch (e) {
-                    // No pasa nada si falla, es solo un warm-up
-                }
-                
-                // Real petición
+                // Real petición directa
                 const response = await fetch('https://prodbymtr-backend.onrender.com/api/crear-pago', {
                     method: 'POST',
                     headers: {
@@ -626,9 +644,7 @@
                 if (!response.ok) {
                     let errorMsg = `Error HTTP: ${response.status}`;
                     if (response.status === 503 || response.status === 504) {
-                        errorMsg = 'El servidor está iniciando. Por favor, esperá 30 segundos e intentá de nuevo.';
-                    } else if (response.status === 0) {
-                        errorMsg = 'No se pudo conectar al servidor. Verificá tu conexión.';
+                        errorMsg = 'El servidor está iniciando. Esperá 30 segundos e intentá de nuevo.';
                     }
                     throw new Error(errorMsg);
                 }
@@ -636,7 +652,6 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    console.log('✅ Sesión creada:', data.sessionId);
                     document.getElementById('loading-text').textContent = 'Redirigiendo a Stripe...';
                     
                     // Redirigir a Stripe
@@ -648,7 +663,7 @@
                         throw new Error('Stripe: ' + result.error.message);
                     }
                 } else {
-                    throw new Error(data.message || data.error || 'Error desconocido');
+                    throw new Error(data.message || data.error || 'Error del servidor');
                 }
             } catch (error) {
                 console.error('❌ Error:', error);
@@ -657,11 +672,9 @@
                 // Mensajes amigables
                 let mensajeUsuario = error.message;
                 
-                if (error.name === 'AbortError' || error.message.includes('timeout')) {
-                    mensajeUsuario = '⏳ El servidor está tardando en responder.\n\nSolución:\n1. Esperá 30 segundos\n2. Recargá la página\n3. Intentá de nuevo\n\n¡Gracias por tu paciencia!';
-                } else if (error.message.includes('iniciando') || error.message.includes('503')) {
-                    mensajeUsuario = '🚀 El servidor se está activando (puede tardar hasta 30 segundos).\nPor favor, intentá de nuevo en medio minuto.';
-                } else if (error.message.includes('Failed to fetch') || error.message.includes('conectar')) {
+                if (error.name === 'AbortError') {
+                    mensajeUsuario = '⏳ El servidor está tardando en responder.\n\nSolución:\n1. Esperá 30 segundos\n2. Recargá la página\n3. Intentá de nuevo';
+                } else if (error.message.includes('Failed to fetch')) {
                     mensajeUsuario = '🔌 Error de conexión. Verificá tu internet e intentá de nuevo.';
                 }
                 
@@ -675,12 +688,18 @@
             }
         }
 
-        // Función para servicios (sin cambios)
+        // Función para servicios mejorada
         function solicitarServicio(nombreServicio, precio) {
             const TU_NUMERO_WHATSAPP = '+595983775018';
             const fecha = new Date().toLocaleDateString();
             
-            const mensaje = `🎵 *SOLICITUD DE SERVICIO - PRODUCCIÓN MUSICAL*\n\n📋 *Servicio:* ${nombreServicio}\n💰 *Precio:* $${precio} USD\n📅 *Fecha:* ${fecha}\n\n👤 *Mi información:*\n• 📧 Email: ___________\n• 📱 Teléfono: ___________\n• 🏷️ Nombre: ___________\n\n🎶 *Detalles del proyecto:*\n• Género musical: ___________\n• Referencias: ___________\n• Fecha límite: ___________\n\n💬 *Comentarios adicionales:*\n___________________\n\nPor favor, contactame para coordinar los detalles. ¡Gracias! ✨`;
+            let mensaje = '';
+            
+            if (nombreServicio === 'PRESET VOCAL PERSONALIZADO') {
+                mensaje = `🎤 *SOLICITUD DE PRESET VOCAL PERSONALIZADO - PRODUCCIÓN MUSICAL*\n\n📋 *Servicio:* ${nombreServicio}\n💰 *Precio:* $${precio} USD\n📅 *Fecha:* ${fecha}\n\n👤 *Mi información:*\n• 📧 Email: ___________\n• 📱 Teléfono: ___________\n• 🏷️ Nombre: ___________\n\n🎤 *Sobre mi voz:*\n• Tipo de voz (aguda/media/grave): ___________\n• Género musical: ___________\n• Referencias vocales: ___________\n• Plugins que uso: ___________\n\n🎶 *¿Qué busco en mi preset vocal?*\n• [ ] Más claridad\n• [ ] Más presencia\n• [ ] Efectos creativos\n• [ ] Compresión profesional\n• [ ] Automatizaciones\n• [ ] Otro: ___________\n\n📁 *Archivos a enviar:*\n• 1-2 pistas de tu voz (dry/wet)\n• Formato: WAV 24-bit\n• Tiempo: 30-60 segundos c/u\n\n💬 *Comentarios adicionales:*\n___________________\n\n¡Listo para crear tu preset único! Contactame para coordinar. ✨`;
+            } else {
+                mensaje = `🎵 *SOLICITUD DE SERVICIO - PRODUCCIÓN MUSICAL*\n\n📋 *Servicio:* ${nombreServicio}\n💰 *Precio:* $${precio} USD\n📅 *Fecha:* ${fecha}\n\n👤 *Mi información:*\n• 📧 Email: ___________\n• 📱 Teléfono: ___________\n• 🏷️ Nombre: ___________\n\n🎶 *Detalles del proyecto:*\n• Género musical: ___________\n• Referencias: ___________\n• Fecha límite: ___________\n\n💬 *Comentarios adicionales:*\n___________________\n\nPor favor, contactame para coordinar los detalles. ¡Gracias! ✨`;
+            }
 
             const mensajeCodificado = encodeURIComponent(mensaje);
             const urlWhatsApp = `https://wa.me/${TU_NUMERO_WHATSAPP}?text=${mensajeCodificado}`;
@@ -689,7 +708,7 @@
         }
 
         // Prevenir que el botón quede "pegado"
-        window.addEventListener('pageshow', function(event) {
+        window.addEventListener('pageshow', function() {
             document.querySelectorAll('.buy-button').forEach(button => {
                 button.disabled = false;
                 if (button.textContent.includes('PROCESANDO')) {
@@ -699,7 +718,7 @@
             hideLoadingModal();
         });
 
-        // Resto del código existente (scroll effects, etc.)
+        // Scroll effects
         document.addEventListener('DOMContentLoaded', function() {
             // Inicializar event listeners
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -715,7 +734,7 @@
                 });
             });
 
-            // Scroll effects
+            // Scroll effects para header
             const header = document.querySelector('.header');
             window.addEventListener('scroll', function() {
                 const scrollY = window.scrollY;

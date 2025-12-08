@@ -152,7 +152,7 @@
             border-radius: 8px;
             margin-bottom: 15px;
             border: 1px solid #333;
-            background: linear-gradient(45deg, #222, #444); /* Fondo mientras carga */
+            background: linear-gradient(45deg, #222, #444);
         }
 
         .product-card h3 {
@@ -309,6 +309,49 @@
             color: white;
         }
 
+        /* ===== FOOTER CORREGIDO ===== */
+        .footer {
+            background: #000000;
+            padding: 3rem 4rem;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .social-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: #1a1a1a;
+        }
+        
+        .social-links a:hover {
+            color: #635bff;
+            border-color: #635bff;
+            background: rgba(99, 91, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .copyright {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+
         @media (max-width: 768px) {
             .header {
                 padding: 1rem 2rem;
@@ -346,7 +389,19 @@
             }
             
             .footer {
-                padding: 2rem 2rem;
+                padding: 2rem 1rem;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .social-links a {
+                width: 200px;
+                text-align: center;
+                padding: 0.8rem;
             }
             
             .product-image {
@@ -553,7 +608,7 @@
         <button class="loading-cancel" onclick="cancelarPago()">Cancelar</button>
     </div>
     
-    <!-- Footer -->
+    <!-- Footer con ID para el enlace de Contacto -->
     <footer class="footer" id="contact">
         <div class="social-links">
             <a href="https://wa.me/595983775018" target="_blank">WhatsApp</a>

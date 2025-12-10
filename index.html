@@ -335,9 +335,6 @@
         
         .social-links a:hover {
             color: #cccccc;
-            border-color: #635bff;
-            background: rgba(99, 91, 255, 0.1);
-            transform: translateY(-2px);
         }
         
         .copyright {
@@ -367,15 +364,6 @@
             .product-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
-            }
-            
-            .payment-methods {
-                padding: 2rem 2rem;
-            }
-            
-            .payment-icons {
-                flex-direction: column;
-                gap: 1rem;
             }
             
             .nav a {
@@ -587,6 +575,16 @@
                 <div class="price-usd">Entrega en 1-2 días</div>
                 <button class="buy-button" onclick="solicitarServicio('MASTERING', 30)">SOLICITAR SERVICIO</button>
             </div>
+
+            <!-- Servicio 5 - BEATS PERSONALIZADOS (NUEVO) -->
+            <div class="product-card service-card">
+                <div class="popular-badge" style="background: linear-gradient(45deg, #ff3366, #ff6633);">🎵 EXCLUSIVO</div>
+                <h3>BEATS PERSONALIZADOS</h3>
+                <p>Beat original hecho desde cero para tu proyecto. Trabajamos juntos en la idea, estructura, sonidos y mezcla final.</p>
+                <div class="price">$80 USD</div>
+                <div class="price-usd">Colaboración directa • Derechos de uso • Archivos stems</div>
+                <button class="buy-button" onclick="solicitarServicio('BEATS PERSONALIZADOS', 80)">SOLICITAR SERVICIO</button>
+            </div>
         </div>
     </section>
 
@@ -603,7 +601,6 @@
         <button class="loading-cancel" onclick="cancelarPago()">Cancelar</button>
     </div>
     
-    <!-- Footer con ID para el enlace de Contacto -->
     <!-- Footer con ID para el enlace de Contacto -->
     <footer class="footer" id="contact">
         <div class="social-links">
@@ -748,6 +745,8 @@
             
             if (nombreServicio === 'PRESET VOCAL PERSONALIZADO') {
                 mensaje = `🎤 *SOLICITUD DE PRESET VOCAL PERSONALIZADO - PRODUCCIÓN MUSICAL*\n\n📋 *Servicio:* ${nombreServicio}\n💰 *Precio:* $${precio} USD\n📅 *Fecha:* ${fecha}\n\n👤 *Mi información:*\n• 📧 Email: ___________\n• 📱 Teléfono: ___________\n• 🏷️ Nombre: ___________\n\n🎤 *Sobre mi voz:*\n• Tipo de voz (aguda/media/grave): ___________\n• Género musical: ___________\n• Referencias vocales: ___________\n• Plugins que uso: ___________\n\n🎶 *¿Qué busco en mi preset vocal?*\n• [ ] Más claridad\n• [ ] Más presencia\n• [ ] Efectos creativos\n• [ ] Compresión profesional\n• [ ] Automatizaciones\n• [ ] Otro: ___________\n\n📁 *Archivos a enviar:*\n• 1-2 pistas de tu voz (dry/wet)\n• Formato: WAV 24-bit\n• Tiempo: 30-60 segundos c/u\n\n💬 *Comentarios adicionales:*\n___________________\n\n¡Listo para crear tu preset único! Contactame para coordinar. ✨`;
+            } else if (nombreServicio === 'BEATS PERSONALIZADOS') {
+                mensaje = `🎵 *SOLICITUD DE BEATS PERSONALIZADOS - PRODUCCIÓN MUSICAL*\n\n📋 *Servicio:* ${nombreServicio}\n💰 *Precio:* $${precio} USD\n📅 *Fecha:* ${fecha}\n\n👤 *Mi información:*\n• 📧 Email: ___________\n• 📱 Teléfono: ___________\n• 🏷️ Nombre/Artista: ___________\n\n🎶 *Detalles del beat:*\n• Género musical: ___________\n• Referencias (artistas/canciones): ___________\n• BPM (si tenés preferencia): ___________\n• Tonalidad (si tenés preferencia): ___________\n\n🎹 *Elementos que quiero incluir:*\n• [ ] Melodía principal\n• [ ] Arreglos\n• [ ] Vocales (adlibs/hooks)\n• [ ] Percusión específica\n• [ ] Efectos de sonido\n• [ ] Otro: ___________\n\n📁 *Información adicional:*\n• ¿Ya tenés una idea o letra?: ___________\n• ¿Para qué proyecto es? (single/álbum/video): ___________\n• Fecha límite (si aplica): ___________\n\n💬 *Comentarios/ideas específicas:*\n___________________\n\n¡Listo para crear tu beat único! Contactame para coordinar. ✨`;
             } else {
                 mensaje = `🎵 *SOLICITUD DE SERVICIO - PRODUCCIÓN MUSICAL*\n\n📋 *Servicio:* ${nombreServicio}\n💰 *Precio:* $${precio} USD\n📅 *Fecha:* ${fecha}\n\n👤 *Mi información:*\n• 📧 Email: ___________\n• 📱 Teléfono: ___________\n• 🏷️ Nombre: ___________\n\n🎶 *Detalles del proyecto:*\n• Género musical: ___________\n• Referencias: ___________\n• Fecha límite: ___________\n\n💬 *Comentarios adicionales:*\n___________________\n\nPor favor, contactame para coordinar los detalles. ¡Gracias! ✨`;
             }
